@@ -1,9 +1,8 @@
 # yyl-admin-template
 
-YYL快速后台启动模板,集成基本后台使用功能。
+YYL快速后台启动模板,继承了vue-element-admin，集成团队需要的基本后台功能。
 
 ## Build Setup
-
 ```bash
 # Clone project
 git clone https://github.com/yuyuel/yyl-admin-template.git
@@ -38,9 +37,14 @@ npm run build --report
 
 [文档连接](https://element.eleme.cn/#/zh-CN)
 
+### vue-element-admin
 
-## License
+继承自vue-element-admin中的vue-admin-template，关于框架功能查看文档。
 
-[MIT](https://github.com/PanJiaChen/vue-admin-template/blob/master/LICENSE) license.
+[文档连接](https://panjiachen.github.io/vue-element-admin-site/zh/)
 
-Copyright (c) 2017-present PanJiaChen
+### svg-icon
+
+在阿里巴巴矢量图库，下载svg格式icon。导入src/icons/svg,即可使用，使用方式`<svg-icon icon-class="xxx" />`
+
+[阿里巴巴矢量图库](https://www.iconfont.cn/)

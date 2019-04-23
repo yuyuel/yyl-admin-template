@@ -2,15 +2,8 @@
   <div class="app-container">
     <!-- 顶部操作栏 -->
     <div class="filter-container">
-      <el-input v-model="searchObj.title" placeholder="搜索内容" style="width: 200px;" class="filter-item"/>
-      <el-select v-model="searchObj.type" placeholder="请选择" clearable style="width: 120px" class="filter-item">
-        <el-option v-for="item in ptionsList" :key="item" :label="item" :value="item" />
-      </el-select>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" >
-        搜索
-      </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" >
-        添加
+      <el-button :loading="downloadLoading" class="filter-item" style="margin-left: 10px;" type="primary" @click="handleExport" >
+        导出 Excel
       </el-button>
     </div>
 
@@ -25,7 +18,7 @@
       style="width: 100%;">
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ scope.row.id }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="姓名" prop="name" width="105"/>
@@ -35,34 +28,13 @@
           {{ scope.row.pageviews }}
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="状态" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
-        </template>
-      </el-table-column>
       <el-table-column align="center" prop="created_at" label="时间" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time"/>
           <span>{{ scope.row.display_time }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="{}">
-          <el-button type="primary" size="mini" >
-            修改
-          </el-button>
-          <el-button size="mini" type="success">
-            编辑
-          </el-button>
-          <el-button size="mini" type="danger">
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
     </el-table>
-
-    <!-- 分页 -->
-    <pagination :hidden="listQuery.total == 0" :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" :auto-scroll="false" @pagination="pageGetList"/>
 
   </div>
 </template>
@@ -70,6 +42,7 @@
 <script>
 import { getList } from '@/api/table'
 import Pagination from '@/components/Pagination'
+import { parseTime } from '@/utils'
 
 export default {
   filters: {
@@ -77,7 +50,10 @@ export default {
       const statusMap = {
         published: 'success',
         draft: 'gray',
-        deleted: 'danger'
+        deleted: 'danger',
+        filename: '',
+        autoWidth: true,
+        bookType: 'xlsx'
       }
       return statusMap[status]
     }
@@ -93,7 +69,8 @@ export default {
         total: 0,
         page: 1,
         limit: 20
-      }
+      },
+      downloadLoading: false
     }
   },
   created() {
@@ -110,6 +87,32 @@ export default {
     },
     pageGetList() {
       this.fetchData()
+    },
+    handleExport() {
+      this.downloadLoading = true
+      import('../../vendor/Export2Excel.js').then(excel => {
+        const tHeader = ['ID', '姓名', '描述', '浏览量', '时间']
+        const filterVal = ['id', 'name', 'title', 'pageviews', 'display_time']
+        const list = this.list
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.filename,
+          autoWidth: this.autoWidth,
+          bookType: this.bookType
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        if (j === 'timestamp') {
+          return parseTime(v[j])
+        } else {
+          return v[j]
+        }
+      }))
     }
   }
 }

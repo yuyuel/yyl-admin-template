@@ -40,44 +40,55 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/student',
+    path: '/table',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'studentIndex',
+        name: 'tableIndex',
         component: () => import('@/views/table/index'),
-        meta: { title: '学员管理', icon: 'student' }
+        meta: { title: '基本表格', icon: 'table' }
       }
     ]
   },
 
   {
-    path: '/teacher',
+    path: '/form',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'teacherIndex',
+        name: 'formIndex',
         component: () => import('@/views/form/index'),
-        meta: { title: '教师管理', icon: 'teacher' }
+        meta: { title: '表单提交', icon: 'form' }
       }
     ]
   },
 
   {
-    path: '/class',
+    path: '/excel',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'classIndex',
-        component: () => import('@/views/form/index'),
-        meta: { title: '分班管理', icon: 'class' }
+        name: 'excelIndex',
+        component: () => import('@/views/excel/index'),
+        meta: { title: 'excel导出', icon: 'excel' }
       }
     ]
   },
-
+  {
+    path: '/upload',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'uploadIndex',
+        component: () => import('@/views/upload/index'),
+        meta: { title: '上传', icon: 'upload' }
+      }
+    ]
+  },
   {
     path: '/attendance',
     component: Layout,
@@ -96,19 +107,6 @@ export const constantRouterMap = [
         name: 'teacherAttendance',
         component: () => import('@/views/form/index'),
         meta: { title: '教师考勤', icon: 'teacher' }
-      }
-    ]
-  },
-
-  {
-    path: '/stock',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'stockIndex',
-        component: () => import('@/views/form/index'),
-        meta: { title: '库存管理', icon: 'stock' }
       }
     ]
   },
