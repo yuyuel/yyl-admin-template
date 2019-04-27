@@ -1,7 +1,7 @@
 <template>
   <div :class="{fullscreen:fullscreen}" class="tinymce-container editor-container">
     <textarea :id="tinymceId" class="tinymce-textarea" />
-    <div class="editor-custom-btn-container">
+    <div v-show="uploadshow" class="editor-custom-btn-container">
       <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
     </div>
   </div>
@@ -41,6 +41,10 @@ export default {
       type: Number,
       required: false,
       default: 360
+    },
+    uploadshow: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -49,15 +53,7 @@ export default {
       hasInit: false,
       tinymceId: this.id,
       fullscreen: false,
-      languageTypeList: {
-        'en': 'en',
-        'zh': 'zh_CN'
-      }
-    }
-  },
-  computed: {
-    language() {
-      return this.languageTypeList[this.$store.getters.language]
+      language: 'zh_CN'
     }
   },
   watch: {
