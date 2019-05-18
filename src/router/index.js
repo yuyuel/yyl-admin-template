@@ -25,7 +25,6 @@ import Layout from '../layout/Layout'
 export const constantRouterMap = [
   { path: '/login', component: () => import('@/views/login/index'), hidden: true },
   { path: '/404', component: () => import('@/views/404'), hidden: true },
-
   {
     path: '',
     component: Layout,
@@ -38,7 +37,10 @@ export const constantRouterMap = [
       meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
     }]
   },
+  { path: '*', component: () => import('@/views/404'), hidden: true }// 刷新页
+]
 
+export const asyncRouterMap = [
   {
     path: '/table',
     component: Layout,
@@ -51,7 +53,6 @@ export const constantRouterMap = [
       }
     ]
   },
-
   {
     path: '/form',
     component: Layout,
@@ -89,7 +90,34 @@ export const constantRouterMap = [
       }
     ]
   },
-  { path: '*', redirect: '/404', hidden: true }
+  {
+    path: '/role',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'role',
+    alwaysShow: true,
+    meta: { title: '系统权限', icon: 'authority' },
+    children: [
+      {
+        path: 'roleUser',
+        name: 'roleUser',
+        component: () => import('@/views/role/user'),
+        meta: { title: '用户管理', icon: 'user' }
+      },
+      {
+        path: 'roleAuth',
+        name: 'roleAuth',
+        component: () => import('@/views/role/auth'),
+        meta: { title: '角色管理', icon: 'role' }
+      },
+      {
+        path: 'roleIndex',
+        name: 'roleIndex',
+        component: () => import('@/views/role/index'),
+        meta: { title: '权限管理', icon: 'key' }
+      }
+    ]
+  }
 ]
 
 export default new Router({
@@ -97,3 +125,27 @@ export default new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
+
+export const roleMap = []
+asyncRouterMap.forEach((element, index) => {
+  if (element.meta) {
+    roleMap.push({
+      resourceType: element.meta.title,
+      subResourceInfoList: []
+    })
+  } else {
+    roleMap.push({
+      subResourceInfoList: []
+    })
+  }
+  element.children.forEach((item, childrenIndex) => {
+    roleMap[index].subResourceInfoList.push({
+      resourceName: item.meta.title,
+      resourceCode: `${index + 1}${childrenIndex + 1}`
+    })
+    if (!roleMap[index].resourceType) {
+      roleMap[index].resourceType = item.meta.title
+    }
+  })
+})
+

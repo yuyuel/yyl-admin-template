@@ -14,7 +14,6 @@
 import { mapGetters } from 'vuex'
 import lineChart from './components/lineChart'
 import PanelGroup from './components/PanelGroup'
-
 export default {
   name: 'Dashboard',
   components: { lineChart, PanelGroup },

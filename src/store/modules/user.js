@@ -52,10 +52,11 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(response => {
           const data = response.data
-          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', data.roles)
+          const rolesList = ['11', '21', '31', '41', '51', '52', '53']
+          if (rolesList && rolesList.length > 0) { // 验证返回的roles是否是一个非空数组
+            resolve(rolesList)
           } else {
-            reject('getInfo: roles must be a non-null array !')
+            resolve(['无权限'])
           }
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
